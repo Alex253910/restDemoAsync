@@ -1,7 +1,10 @@
 package com.example.async.demo;
 
+import com.example.async.demo.controller.OrderController;
 import com.example.async.demo.controller.ProductController;
+import com.example.async.demo.dto.Order;
 import com.example.async.demo.dto.ProductResponse;
+import com.example.async.demo.service.OrderService;
 import com.example.async.demo.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,16 +23,20 @@ class DemoApplicationTests {
 
 	@Mock
 	private ProductService productService;
+	@Mock
+	private OrderService orderService;
 
 	@InjectMocks
-	private ProductController itemController;
+	private ProductController productController;
+	@InjectMocks
+	private OrderController orderController;
 
 	private WebTestClient webTestClient;
 
 	@BeforeEach
 	public void setUp() {
 		MockitoAnnotations.openMocks(this);
-		webTestClient = WebTestClient.bindToController(itemController).build();
+		webTestClient = WebTestClient.bindToController(productController).build();
 	}
 
 	@Test
@@ -47,6 +54,15 @@ class DemoApplicationTests {
 				.expectBodyList(String.class)
 				.hasSize(3)
 				.contains();
+	}
+
+	@Test
+	public void testSaveOrder() {
+		orderService.SaveOrder(Order.builder()
+				.itemId(1)
+				.description("Test Description")
+				.quantity(2)
+				.build());
 	}
 
 }
